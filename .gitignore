@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# Production and local runtime
+*.tsbuildinfo
+dev-server*.log
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# AWS and Amplify local state
+.aws/
+.amplify/
+amplify/.config/local-*
+amplify/backend/amplify-meta.json
+amplify/backend/awscloudformation/
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+
+# IDE and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Vercel
+.vercel/
