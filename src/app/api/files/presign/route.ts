@@ -25,14 +25,24 @@ export async function POST(request: NextRequest) {
 
     const tenantId = session?.tenantId || bodyTenant || "public";
 
-    const upload = await createCaseFileUploadUrl({
-      tenantId,
-      caseId,
-      fileName,
-      contentType
-    });
+    try {
+      const upload = await createCaseFileUploadUrl({
+        tenantId,
+        caseId,
+        fileName,
+        contentType
+      });
 
-    return NextResponse.json(upload);
+      return NextResponse.json(upload);
+    } catch (err: any) {
+      // Log server-side details and return Arabic-friendly message
+      // eslint-disable-next-line no-console
+      console.error('Presign route error for tenant', tenantId, 'case', caseId, err);
+
+      // Map known error messages to user-facing Arabic strings
+      const msg = err instanceof Error ? err.message : 'خطأ غير متوقع أثناء إنشاء رابط التحميل';
+      return NextResponse.json({ error: msg }, { status: 500 });
+    }
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "خطأ غير متوقع" }, { status: 500 });
   }
