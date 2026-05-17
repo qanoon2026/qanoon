@@ -53,6 +53,25 @@ Runtime storage rule:
 - Do not store uploaded files on the app server or inside the project.
 - Uploads must request `POST /api/files/presign`.
 - The browser uploads directly to S3 using the returned presigned URL.
+
+S3 CORS
+------
+If you upload directly from the browser, add this CORS policy to your S3 bucket:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+  <CORSRule>
+    <AllowedOrigin>*</AllowedOrigin>
+    <AllowedMethod>PUT</AllowedMethod>
+    <AllowedMethod>GET</AllowedMethod>
+    <AllowedHeader>*</AllowedHeader>
+    <MaxAgeSeconds>3000</MaxAgeSeconds>
+  </CORSRule>
+</CORSConfiguration>
+```
+
+Limit `AllowedOrigin` to your app origin in production.
 - Store the returned S3 object key in PostgreSQL.
 
 Core PostgreSQL schema:

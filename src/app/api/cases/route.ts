@@ -25,18 +25,24 @@ export async function GET(request: NextRequest) {
       session.tenantId,
       `
         select
-          id,
-          title,
-          client_name,
-          court,
-          status,
-          priority,
-          assigned_lawyer_name,
-          progress,
-          next_session_at
-        from legal_cases
-        where tenant_id = $1
-        order by updated_at desc
+          c.id,
+          c.title,
+          c.client_name,
+          c.court,
+          c.status,
+          c.priority,
+          c.assigned_lawyer_name,
+          c.progress,
+          c.next_session_at,
+          (
+            select json_agg(row_to_json(cf)) from (
+              select id, file_name, file_type, file_size, s3_key, uploaded_at
+              from case_files where tenant_id = $1 and case_id = c.id order by uploaded_at desc
+            ) cf
+          ) as files
+        from legal_cases c
+        where c.tenant_id = $1
+        order by c.updated_at desc
         limit 100
       `
     );
