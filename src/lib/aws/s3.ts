@@ -57,14 +57,9 @@ export async function createCaseFileUploadUrl({
     const safeFileName = fileName.replace(/[^0-9A-Za-z\u0600-\u06FF.\- ]/g, "_");
     const key = `tenants/${tenantId}/cases/${caseId}/${randomUUID()}-${safeFileName}`;
 
-    let bucketName: string;
-    try {
-      bucketName = getRequiredEnv("S3_BUCKET_NAME");
-    } catch (e: any) {
-      // eslint-disable-next-line no-console
-      console.error('Presign failed: missing S3_BUCKET_NAME', e);
-      throw new Error("خطأ: المتغير البيئي المفقود: S3_BUCKET_NAME");
-    }
+    const bucketName = getRequiredEnv("S3_BUCKET_NAME");
+    // eslint-disable-next-line no-console
+    console.log('Using S3 bucket:', bucketName);
 
     const command = new PutObjectCommand({
       Bucket: bucketName,
@@ -108,6 +103,8 @@ export async function createCaseFileUploadUrl({
 export async function createPresignedGetUrl(key: string, expiresSeconds = 60 * 10) {
   try {
     const bucketName = getRequiredEnv("S3_BUCKET_NAME");
+    // eslint-disable-next-line no-console
+    console.log('Using S3 bucket:', bucketName);
     const command = new GetObjectCommand({
       Bucket: bucketName,
       Key: key

@@ -1,3 +1,5 @@
+export const bucketName = process.env.S3_BUCKET_NAME || "qanoon-case-files";
+
 export function getEnv(key: string) {
   return process.env[key];
 }
@@ -19,6 +21,10 @@ function alt(key: string) {
 }
 
 export function getRequiredEnv(key: string) {
+  if (key === "S3_BUCKET_NAME") {
+    return bucketName;
+  }
+
   const names = alt(key);
   for (const name of names) {
     const v = process.env[name];
