@@ -4,152 +4,82 @@ import { Plus, Clock, MapPin } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
 import { ActionButton } from '@/components/ActionButton';
 
-const upcomingEvents = [
-  {
-    id: 1,
-    title: 'جلسة استئناف - القضية #2048',
-    date: '16 مايو 2026',
-    time: '10:00 صباحاً',
-    location: 'محكمة الاستئناف - الرياض',
-    type: 'session',
-    caseId: '2048'
-  },
-  {
-    id: 2,
-    title: 'مرافعة نهائية',
-    date: '17 مايو 2026',
-    time: '02:00 مساءً',
-    location: 'المحكمة الإدارية',
-    type: 'hearing',
-    caseId: '2045'
-  },
-  {
-    id: 3,
-    title: 'جلسة تحكيم',
-    date: '20 مايو 2026',
-    time: '03:00 مساءً',
-    location: 'مركز التحكيم السعودي',
-    type: 'mediation',
-    caseId: '2043'
-  },
+const events = [
+  { id: 1, title: 'جلسة استئناف - القضية #2048', date: '16 مايو', time: '10:00', location: 'محكمة الاستئناف - الرياض' },
+  { id: 2, title: 'مرافعة نهائية - القضية #2045', date: '17 مايو', time: '14:00', location: 'المحكمة الإدارية' },
+  { id: 3, title: 'جلسة تحكيم - القضية #2043', date: '20 مايو', time: '15:00', location: 'مركز التحكيم السعودي' },
 ];
+
+const weekDays = ['ح', 'ن', 'ث', 'ع', 'خ', 'ج', 'س'];
 
 export default function CalendarPage() {
   return (
     <div className="space-y-8">
-      {/* Header */}
       <PageHeader
         title="التقويم"
-        description="جدول مواعيدك والجلسات القضائية"
-        action={
-          <ActionButton variant="primary">
-            <Plus className="h-4 w-4" />
-            إضافة حدث
-          </ActionButton>
-        }
+        description="لوحة تنظيمية للجلسات، الاجتماعات، والعروض التقديمية" 
+        action={<ActionButton variant="primary"><Plus className="h-4 w-4" />إضافة حدث</ActionButton>}
       />
 
-      {/* Upcoming Events */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-bold text-slate-900">الأحداث القادمة</h3>
-        <div className="space-y-3">
-          {upcomingEvents.map((event) => (
-            <div key={event.id} className="card-lg border-l-4 border-l-blue-500 hover:shadow-lg transition-shadow">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h4 className="font-bold text-slate-900 text-lg">{event.title}</h4>
-                  <div className="flex flex-col sm:flex-row gap-4 mt-3 text-sm text-slate-600">
-                    <span className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-blue-500" />
-                      {event.date} في {event.time}
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-blue-500" />
-                      {event.location}
-                    </span>
-                  </div>
+      <div className="grid grid-cols-1 xl:grid-cols-[0.7fr_1.3fr] gap-6">
+        <aside className="glass-card p-6 space-y-6">
+          <div>
+            <p className="text-sm uppercase tracking-[0.18em] text-[rgb(var(--text-secondary))]">الأحداث القادمة</p>
+            <h2 className="mt-3 text-2xl font-semibold text-[rgb(var(--text-primary))]">جدول الجلسات</h2>
+          </div>
+          <div className="space-y-4">
+            {events.map((event) => (
+              <div key={event.id} className="rounded-3xl border border-[rgba(var(--border),0.18)] bg-[rgba(var(--surface-soft),0.14)] p-5 transition duration-200 hover:border-[rgba(var(--accent),0.35)]">
+                <p className="text-lg font-semibold text-[rgb(var(--text-primary))]">{event.title}</p>
+                <div className="mt-3 space-y-2 text-sm text-[rgb(var(--text-secondary))]">
+                  <p className="flex items-center gap-2"><Clock className="h-4 w-4 text-[rgb(var(--accent))]" />{event.date} • {event.time}</p>
+                  <p className="flex items-center gap-2"><MapPin className="h-4 w-4 text-[rgb(var(--accent))]" />{event.location}</p>
                 </div>
-                <ActionButton variant="ghost" size="sm">عرض</ActionButton>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Calendar Grid */}
-      <div className="card-lg">
-        <h3 className="text-lg font-bold text-slate-900 mb-6">مايو 2026</h3>
-        <div className="space-y-6">
-          {/* Day Headers */}
-          <div className="grid grid-cols-7 gap-2 mb-2">
-            {['ح', 'ن', 'ث', 'ع', 'خ', 'ج', 'س'].map((day, idx) => (
-              <div key={idx} className="font-bold text-slate-600 text-center py-2 text-sm">
-                {day}
               </div>
             ))}
           </div>
+        </aside>
 
-          {/* Calendar Days */}
+        <section className="glass-card p-6">
+          <div className="flex items-center justify-between gap-4 mb-6">
+            <div>
+              <p className="text-sm uppercase tracking-[0.18em] text-[rgb(var(--text-secondary))]">تقويم الشهر</p>
+              <h2 className="mt-3 text-2xl font-semibold text-[rgb(var(--text-primary))]">مايو 2026</h2>
+            </div>
+            <ActionButton variant="secondary">عرض الجدول الكامل</ActionButton>
+          </div>
+          <div className="grid grid-cols-7 gap-2 text-center text-[rgb(var(--text-secondary))] uppercase text-xs tracking-[0.2em] mb-3">
+            {weekDays.map((day) => (
+              <div key={day} className="py-3">{day}</div>
+            ))}
+          </div>
           <div className="grid grid-cols-7 gap-2">
-            {Array.from({ length: 31 }, (_, i) => {
-              const day = i + 1;
-              const isEventDay = [16, 17, 20].includes(day);
+            {Array.from({ length: 31 }, (_, index) => {
+              const day = index + 1;
+              const isEvent = [16, 17, 20].includes(day);
               return (
                 <div
                   key={day}
-                  className={`p-2 rounded-lg text-center cursor-pointer transition-all text-sm font-medium ${
-                    isEventDay
-                      ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md hover:shadow-lg'
-                      : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
-                  }`}
+                  className={`rounded-3xl p-3 text-sm font-semibold transition duration-200 ${isEvent ? 'bg-[rgba(var(--accent),0.22)] text-[rgb(var(--text-primary))] shadow-soft' : 'bg-[rgba(var(--surface-soft),0.08)] text-[rgb(var(--text-secondary))] hover:bg-[rgba(var(--surface-soft),0.2)]'}`}
                 >
-                  {day}
-                  {isEventDay && <div className="h-1 w-1 bg-yellow-300 rounded-full mx-auto mt-1"></div>}
+                  <div>{day}</div>
                 </div>
               );
             })}
           </div>
-        </div>
+        </section>
       </div>
 
-      {/* Add Event Form Design */}
-      <div className="mt-8 pt-8 border-t border-slate-200">
-        <h3 className="text-lg font-bold text-slate-900 mb-4">إضافة حدث جديد</h3>
-        <div className="card-lg max-w-2xl">
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">عنوان الحدث</label>
-              <input
-                type="text"
-                placeholder="مثال: جلسة استئناف"
-                className="input-field"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">التاريخ</label>
-                <input type="date" className="input-field" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">الوقت</label>
-                <input type="time" className="input-field" />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">المكان</label>
-              <input
-                type="text"
-                placeholder="المحكمة أو الموقع"
-                className="input-field"
-              />
-            </div>
-
-            <div className="flex gap-3 pt-4">
-              <ActionButton variant="primary">حفظ الحدث</ActionButton>
-              <ActionButton variant="ghost">إلغاء</ActionButton>
-            </div>
+      <div className="glass-card p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <p className="text-sm uppercase tracking-[0.18em] text-[rgb(var(--text-secondary))]">إدارة الأحداث</p>
+            <h2 className="mt-3 text-xl font-semibold text-[rgb(var(--text-primary))]">تنسيق الخط الزمني القانوني</h2>
+          </div>
+          <div className="flex flex-wrap gap-3 text-sm text-[rgb(var(--text-secondary))]">
+            <span className="rounded-full bg-[rgba(var(--surface-soft),0.16)] px-4 py-2">أحداث: 14</span>
+            <span className="rounded-full bg-[rgba(var(--surface-soft),0.16)] px-4 py-2">جلسات هذا الشهر: 7</span>
+            <span className="rounded-full bg-[rgba(var(--surface-soft),0.16)] px-4 py-2">مواعيد ملغاة: 1</span>
           </div>
         </div>
       </div>

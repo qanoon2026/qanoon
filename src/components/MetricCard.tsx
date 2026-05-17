@@ -9,20 +9,20 @@ interface MetricCardProps {
   color?: 'blue' | 'green' | 'amber' | 'purple' | 'red';
 }
 
-const colorMap = {
-  blue: 'bg-blue-50 border-blue-200',
-  green: 'bg-green-50 border-green-200',
-  amber: 'bg-amber-50 border-amber-200',
-  purple: 'bg-purple-50 border-purple-200',
-  red: 'bg-red-50 border-red-200',
+const accentMap: Record<string, string> = {
+  blue: 'rgba(56, 189, 248, 0.16)',
+  green: 'rgba(34, 197, 94, 0.16)',
+  amber: 'rgba(234, 179, 8, 0.16)',
+  purple: 'rgba(168, 85, 247, 0.16)',
+  red: 'rgba(239, 68, 68, 0.16)',
 };
 
-const iconBgMap = {
-  blue: 'bg-blue-100 text-blue-600',
-  green: 'bg-green-100 text-green-600',
-  amber: 'bg-amber-100 text-amber-600',
-  purple: 'bg-purple-100 text-purple-600',
-  red: 'bg-red-100 text-red-600',
+const iconColorMap: Record<string, string> = {
+  blue: 'rgba(96, 165, 250, 1)',
+  green: 'rgba(34, 197, 94, 1)',
+  amber: 'rgba(234, 179, 8, 1)',
+  purple: 'rgba(168, 85, 247, 1)',
+  red: 'rgba(239, 68, 68, 1)',
 };
 
 export function MetricCard({
@@ -34,24 +34,31 @@ export function MetricCard({
   color = 'blue',
 }: MetricCardProps) {
   return (
-    <div className={`card-lg ${colorMap[color]}`}>
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-sm font-medium text-slate-600">{label}</p>
-          <p className="text-3xl font-bold text-slate-900 mt-2">{value}</p>
+    <div className="card-lg border border-[rgba(var(--border),0.22)] bg-[rgba(var(--surface),0.95)]">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-medium uppercase tracking-[0.24em] text-[rgb(var(--text-secondary))]">{label}</p>
+          <p className="mt-4 text-3xl font-semibold text-[rgb(var(--text-primary))]">{value}</p>
           {change && (
-            <p className={`text-xs font-semibold mt-2 ${
-              changeType === 'positive' ? 'text-green-600' :
-              changeType === 'negative' ? 'text-red-600' :
-              'text-slate-600'
+            <p className={`mt-3 text-xs font-semibold ${
+              changeType === 'positive'
+                ? 'text-emerald-300'
+                : changeType === 'negative'
+                ? 'text-rose-300'
+                : 'text-[rgb(var(--text-secondary))]'
             }`}>
               {changeType === 'positive' && '↑'} {changeType === 'negative' && '↓'} {change}
             </p>
           )}
         </div>
         {icon && (
-          <div className={`h-12 w-12 rounded-lg flex items-center justify-center ${iconBgMap[color]} flex-shrink-0`}>
-            {icon}
+          <div
+            className="flex h-14 w-14 items-center justify-center rounded-3xl"
+            style={{ backgroundColor: accentMap[color] }}
+          >
+            <div className="text-xl" style={{ color: iconColorMap[color] }}>
+              {icon}
+            </div>
           </div>
         )}
       </div>

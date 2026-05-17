@@ -33,24 +33,20 @@ export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed right-0 top-0 h-screen w-80 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white shadow-2xl flex flex-col z-50 border-l border-slate-700">
-      {/* Logo Section */}
-      <div className="border-b border-slate-700/50 px-6 py-8">
+    <aside className="fixed right-0 top-0 z-50 flex h-screen w-80 flex-col border-l border-[rgba(var(--border),0.22)] bg-[rgba(var(--surface),0.94)] shadow-[0_24px_80px_rgba(0,0,0,0.20)] backdrop-blur-xl">
+      <div className="border-b border-[rgba(var(--border),0.18)] px-6 py-8">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center shadow-lg">
-            <Scale3d className="h-6 w-6 text-slate-900 font-bold" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-[rgba(var(--accent),0.18)] shadow-soft text-[rgb(var(--accent))]">
+            <Scale3d className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-300 to-yellow-100 bg-clip-text text-transparent">
-              قانوني
-            </h1>
-            <p className="text-xs text-slate-400 mt-0.5">منصة إدارة قضايا</p>
+            <h1 className="text-2xl font-bold tracking-tight text-[rgb(var(--text-primary))]">قانوني</h1>
+            <p className="text-xs font-medium text-[rgb(var(--text-secondary))] mt-1">نظام إدارة قانوني متميز</p>
           </div>
         </div>
       </div>
 
-      {/* Main Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-6 space-y-1">
+      <nav className="flex-1 overflow-y-auto px-3 py-6 space-y-2">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
@@ -59,50 +55,44 @@ export function AppSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-all duration-200 group ${
+              className={`flex items-center gap-3 rounded-3xl px-4 py-3 text-sm font-medium transition duration-200 ${
                 isActive
-                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 shadow-lg shadow-blue-500/20'
-                  : 'text-slate-300 hover:bg-slate-700/50'
+                  ? 'bg-[rgba(var(--accent),0.16)] text-[rgb(var(--text-primary))] shadow-lg shadow-[rgba(var(--accent),0.10)]'
+                  : 'text-[rgb(var(--text-secondary))] hover:bg-[rgba(var(--text-primary),0.06)] hover:text-[rgb(var(--text-primary))]'
               }`}
             >
               <Icon className="h-5 w-5 flex-shrink-0" />
-              <span className="font-medium text-sm">{item.name}</span>
-              {isActive && (
-                <div className="mr-auto h-1 w-1 rounded-full bg-yellow-300"></div>
-              )}
+              <span>{item.name}</span>
+              {isActive && <div className="mr-auto h-1 w-1 rounded-full bg-[rgb(var(--accent))]"></div>}
             </Link>
           );
         })}
       </nav>
 
-      {/* Bottom Navigation */}
-      <div className="border-t border-slate-700/50 px-3 py-4 space-y-1">
+      <div className="border-t border-[rgba(var(--border),0.18)] px-3 py-4 space-y-2">
         {bottomItems.map((item) => {
           const Icon = item.icon;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 rounded-lg px-4 py-3 text-slate-300 hover:bg-slate-700/50 transition-all duration-200"
+              className="flex items-center gap-3 rounded-3xl px-4 py-3 text-[rgb(var(--text-secondary))] transition duration-200 hover:bg-[rgba(var(--text-primary),0.06)] hover:text-[rgb(var(--text-primary))]"
             >
               <Icon className="h-5 w-5 flex-shrink-0" />
-              <span className="font-medium text-sm">{item.name}</span>
+              <span>{item.name}</span>
             </Link>
           );
         })}
       </div>
 
-      {/* User Profile Section */}
-      <div className="border-t border-slate-700/50 px-4 py-4">
-        <button className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-slate-700/30 transition-colors group">
-          <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center font-semibold text-slate-900">
-            م
+      <div className="border-t border-[rgba(var(--border),0.18)] px-4 py-4">
+        <button className="flex w-full items-center gap-3 rounded-3xl border border-[rgba(var(--border),0.18)] bg-[rgba(var(--surface-soft),0.72)] px-4 py-3 text-left transition duration-200 hover:bg-[rgba(var(--surface-soft),0.92)]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-3xl bg-[rgba(var(--accent),0.18)] text-[rgb(var(--accent))] font-semibold">م</div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-[rgb(var(--text-primary))]">محمد الشعيبي</p>
+            <p className="text-[0.68rem] text-[rgb(var(--text-secondary))]">محامي رئيسي</p>
           </div>
-          <div className="flex-1 text-left">
-            <p className="text-sm font-semibold">محمد الشعيبي</p>
-            <p className="text-xs text-slate-400">محامي رئيسي</p>
-          </div>
-          <LogOut className="h-4 w-4 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+          <LogOut className="h-4 w-4 text-[rgb(var(--text-secondary))]" />
         </button>
       </div>
     </aside>

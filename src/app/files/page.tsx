@@ -1,142 +1,105 @@
 'use client';
 
-import { Plus, Download, Trash2, File, Folder, Upload, FileText } from 'lucide-react';
+import { Plus, Download, Trash2, File, Folder, Upload } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
 import { ActionButton } from '@/components/ActionButton';
 
 const filesList = [
-  {
-    id: 1,
-    name: 'عقد الموكالة - أحمد العامري.pdf',
-    size: '2.4 MB',
-    date: '15 مايو 2026',
-    type: 'pdf',
-    case: '2048'
-  },
-  {
-    id: 2,
-    name: 'أوراق القضية #2048',
-    size: 'مجلد',
-    date: '12 مايو 2026',
-    type: 'folder',
-    case: '2048'
-  },
-  {
-    id: 3,
-    name: 'رسالة المحكمة - الرد.docx',
-    size: '450 KB',
-    date: '10 مايو 2026',
-    type: 'doc',
-    case: '2045'
-  },
-  {
-    id: 4,
-    name: 'قائمة الشهود والمستندات.xlsx',
-    size: '180 KB',
-    date: '8 مايو 2026',
-    type: 'sheet',
-    case: '2046'
-  },
+  { id: 1, name: 'عقد الموكالة - أحمد العامري.pdf', size: '2.4 MB', date: '15 مايو', type: 'pdf', caseId: '2048' },
+  { id: 2, name: 'أوراق القضية #2048', size: 'مجلد', date: '12 مايو', type: 'folder', caseId: '2048' },
+  { id: 3, name: 'رسالة المحكمة - الرد.docx', size: '450 KB', date: '10 مايو', type: 'doc', caseId: '2045' },
+  { id: 4, name: 'قائمة الشهود والمستندات.xlsx', size: '180 KB', date: '8 مايو', type: 'sheet', caseId: '2046' },
 ];
 
 export default function FilesPage() {
   return (
     <div className="space-y-8">
-      {/* Header */}
       <PageHeader
         title="الملفات"
-        description="إدارة ملفاتك والمستندات القانونية"
-        action={
-          <ActionButton variant="primary">
-            <Plus className="h-4 w-4" />
-            رفع ملف
-          </ActionButton>
-        }
+        description="نظام الملفات القانوني مع تخزين ذكي وتنظيم قضائي" 
+        action={<ActionButton variant="primary"><Plus className="h-4 w-4" />رفع ملف</ActionButton>}
       />
 
-      {/* Upload Area Design */}
-      <div className="card-lg border-2 border-dashed border-blue-300 bg-gradient-to-br from-blue-50 to-blue-50 hover:border-blue-500 transition-colors cursor-pointer">
-        <div className="flex flex-col items-center justify-center py-12">
-          <div className="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-            <Upload className="h-8 w-8 text-blue-600" />
+      <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6">
+        <section className="glass-card p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.18em] text-[rgb(var(--text-secondary))]">رفع الملفات</p>
+              <h2 className="mt-3 text-2xl font-semibold text-[rgb(var(--text-primary))]">مستودع الوثائق الآمن</h2>
+            </div>
+            <ActionButton variant="secondary">تنظيم الملفات</ActionButton>
           </div>
-          <h3 className="text-lg font-bold text-slate-900">اسحب ملفاتك هنا</h3>
-          <p className="text-slate-600 mt-2">أو انقر لاختيار ملفات</p>
-          <p className="text-xs text-slate-500 mt-2">الملفات المدعومة: PDF، DOCX، XLSX، JPG، PNG</p>
-        </div>
+          <div className="mt-6 rounded-[2rem] border border-dashed border-[rgba(var(--border),0.22)] bg-[rgba(var(--surface-soft),0.12)] p-10 text-center transition hover:border-[rgba(var(--accent),0.35)] hover:bg-[rgba(var(--surface-soft),0.2)]">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-[rgba(var(--accent),0.16)] text-[rgb(var(--accent))]">
+              <Upload className="h-8 w-8" />
+            </div>
+            <p className="mt-4 text-lg font-semibold text-[rgb(var(--text-primary))]">اسحب الملفات أو قم بتحميلها</p>
+            <p className="mt-2 text-sm text-[rgb(var(--text-secondary))]">PDF، DOCX، XLSX، JPG، PNG</p>
+          </div>
+        </section>
+
+        <aside className="space-y-6">
+          <div className="glass-card p-6">
+            <p className="text-sm uppercase tracking-[0.18em] text-[rgb(var(--text-secondary))]">السعة</p>
+            <div className="mt-4 space-y-3">
+              <div className="flex items-center justify-between text-sm text-[rgb(var(--text-secondary))]">
+                <span>المستخدم</span>
+                <span className="font-semibold text-[rgb(var(--text-primary))]">7.2 GB / 10 GB</span>
+              </div>
+              <div className="h-3 rounded-full bg-[rgba(var(--border),0.18)] overflow-hidden">
+                <div className="h-full w-3/4 rounded-full bg-[rgba(var(--accent),0.9)]"></div>
+              </div>
+              <p className="text-xs text-[rgb(var(--text-secondary))]">3.8 GB متاحة</p>
+            </div>
+          </div>
+
+          <div className="glass-card p-6">
+            <p className="text-sm uppercase tracking-[0.18em] text-[rgb(var(--text-secondary))]">التنظيم الذكي</p>
+            <ul className="mt-4 space-y-3 text-sm text-[rgb(var(--text-secondary))]">
+              <li>• أنشئ مجلدات لكل قضية مهمة.</li>
+              <li>• عِدّل أسماء الملفات بمستوى دقة عالٍ.</li>
+              <li>• اربط المستندات بالقضايا ذات الصلة.</li>
+            </ul>
+          </div>
+        </aside>
       </div>
 
-      {/* Storage Stats */}
-      <div className="card-lg">
-        <h3 className="font-bold text-slate-900 mb-4">سعة التخزين</h3>
-        <div className="space-y-3">
-          <div className="flex justify-between text-sm">
-            <span className="text-slate-600 font-medium">المستخدم</span>
-            <span className="font-bold text-slate-900">7.2 GB من 10 GB</span>
+      <div className="glass-card p-6 overflow-x-auto">
+        <div className="flex items-center justify-between gap-4 mb-6">
+          <div>
+            <p className="text-sm uppercase tracking-[0.18em] text-[rgb(var(--text-secondary))]">الملفات الأخيرة</p>
+            <h2 className="mt-3 text-2xl font-semibold text-[rgb(var(--text-primary))]">أحدث المستندات القضائية</h2>
           </div>
-          <div className="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
-            <div className="h-full w-3/4 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full"></div>
-          </div>
-          <p className="text-xs text-slate-500">3.8 GB متبقية</p>
+          <ActionButton variant="ghost">عرض الكل</ActionButton>
         </div>
-      </div>
-
-      {/* Files List Table */}
-      <div className="card-lg overflow-hidden">
-        <h3 className="text-lg font-bold text-slate-900 mb-4">الملفات الأخيرة</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="table-head">
-              <tr>
-                <th className="px-6 py-4 text-right font-semibold text-slate-700 text-sm">الملف</th>
-                <th className="px-6 py-4 text-right font-semibold text-slate-700 text-sm">الحجم</th>
-                <th className="px-6 py-4 text-right font-semibold text-slate-700 text-sm">التاريخ</th>
-                <th className="px-6 py-4 text-right font-semibold text-slate-700 text-sm">القضية</th>
-                <th className="px-6 py-4 text-right font-semibold text-slate-700 text-sm"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filesList.map((file) => (
-                <tr key={file.id} className="table-row">
-                  <td className="px-6 py-4 flex items-center gap-3">
-                    {file.type === 'folder' ? (
-                      <Folder className="h-5 w-5 text-amber-500 flex-shrink-0" />
-                    ) : (
-                      <File className="h-5 w-5 text-blue-500 flex-shrink-0" />
-                    )}
-                    <span className="font-medium text-slate-900">{file.name}</span>
-                  </td>
-                  <td className="px-6 py-4 text-slate-600 text-sm">{file.size}</td>
-                  <td className="px-6 py-4 text-slate-600 text-sm">{file.date}</td>
-                  <td className="px-6 py-4">
-                    <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold">
-                      #{file.case}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 flex gap-2 justify-end">
-                    <button className="p-2 hover:bg-blue-50 text-blue-600 rounded-lg transition-colors">
-                      <Download className="h-4 w-4" />
-                    </button>
-                    <button className="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors">
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </td>
-                </tr>
+        <table className="w-full text-right">
+          <thead className="table-head">
+            <tr>
+              {['الملف', 'الحجم', 'التاريخ', 'القضية', ''].map((title) => (
+                <th key={title} className="px-6 py-4 text-sm font-semibold uppercase tracking-[0.18em]">{title}</th>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* File Organization Tips */}
-      <div className="card-lg bg-gradient-to-br from-amber-50 to-amber-50 border-amber-200">
-        <h3 className="font-bold text-slate-900 mb-3">💡 نصيحة: تنظيم الملفات</h3>
-        <ul className="space-y-2 text-sm text-slate-700">
-          <li>• قم بإنشاء مجلدات منفصلة لكل قضية</li>
-          <li>• احفظ العقود والاتفاقيات في مجلد خاص</li>
-          <li>• استخدم أسماء واضحة للملفات مع التاريخ</li>
-          <li>• قم بنسخ احتياطي للملفات المهمة بانتظام</li>
-        </ul>
+            </tr>
+          </thead>
+          <tbody>
+            {filesList.map((file) => (
+              <tr key={file.id} className="table-row">
+                <td className="px-6 py-4 flex items-center gap-3">
+                  {file.type === 'folder' ? <Folder className="h-5 w-5 text-[rgb(var(--accent))]" /> : <File className="h-5 w-5 text-[rgb(var(--accent))]" />}
+                  <span className="font-medium text-[rgb(var(--text-primary))]">{file.name}</span>
+                </td>
+                <td className="px-6 py-4 text-[rgb(var(--text-secondary))]">{file.size}</td>
+                <td className="px-6 py-4 text-[rgb(var(--text-secondary))]">{file.date}</td>
+                <td className="px-6 py-4">
+                  <span className="inline-flex rounded-full bg-[rgba(var(--accent),0.16)] px-3 py-1 text-xs font-semibold text-[rgb(var(--accent))]">#{file.caseId}</span>
+                </td>
+                <td className="px-6 py-4 flex items-center justify-end gap-2">
+                  <button className="rounded-2xl border border-[rgba(var(--border),0.16)] bg-[rgba(var(--surface-soft),0.14)] p-2 text-[rgb(var(--text-primary))] transition hover:bg-[rgba(var(--surface-soft),0.24)]"><Download className="h-4 w-4" /></button>
+                  <button className="rounded-2xl border border-rose-400/20 bg-[rgba(239,68,68,0.12)] p-2 text-rose-200 transition hover:bg-[rgba(239,68,68,0.2)]"><Trash2 className="h-4 w-4" /></button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
