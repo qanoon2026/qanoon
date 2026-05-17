@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Lora:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,12 +6,18 @@
 
 :root {
   color-scheme: light;
-  --color-primary: 59 130 246;
-  --color-secondary: 201 162 39;
-  --color-accent: 99 102 241;
-  --color-dark: 18 24 62;
-  --color-light: 247 248 251;
-  background: #f7f8fb;
+  /* Premium Legal Tech Color Palette */
+  --navy-900: 17 24 62;
+  --navy-800: 30 41 82;
+  --navy-700: 43 58 102;
+  --gold: 180 133 40;
+  --gold-light: 218 175 105;
+  --slate-50: 250 250 250;
+  --slate-100: 241 245 250;
+  --slate-200: 226 232 240;
+  --slate-600: 71 85 105;
+  --slate-700: 51 65 85;
+  --slate-900: 15 23 42;
 }
 
 * {
@@ -20,23 +26,21 @@
 
 html {
   direction: rtl;
-  font-family: 'Almarai', system-ui, -apple-system, sans-serif;
+  font-family: 'Almarai', -apple-system, system-ui, sans-serif;
 }
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at 16% 12%, rgba(201, 162, 39, 0.12), transparent 32rem),
-    radial-gradient(circle at 84% 8%, rgba(59, 130, 246, 0.1), transparent 28rem),
-    linear-gradient(135deg, rgba(241, 245, 249, 0.95), rgba(240, 249, 255, 0.93)),
-    #f7f8fb;
-  color: #172033;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 250, 248, 0.95) 50%, rgba(245, 243, 238, 0.92) 100%);
+  min-height: 100vh;
+  color: rgb(var(--navy-900));
   font-weight: 400;
+  letter-spacing: 0.3px;
 }
 
 ::selection {
-  background: rgba(59, 130, 246, 0.3);
-  color: #07111f;
+  background: rgb(var(--gold) / 0.25);
+  color: rgb(var(--navy-900));
 }
 
 a {
@@ -49,32 +53,127 @@ input,
 select,
 textarea {
   font: inherit;
-  font-family: 'Almarai', system-ui, -apple-system, sans-serif;
+  font-family: 'Almarai', -apple-system, system-ui, sans-serif;
 }
 
-/* Premium styling */
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(var(--slate-100));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--gold), 0.4);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--gold), 0.6);
+}
+
+/* Premium Component Library */
 @layer components {
+  /* Buttons */
   .btn-primary {
-    @apply px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:from-blue-700 hover:to-blue-800 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-secondary {
-    @apply px-4 py-2 bg-gradient-to-r from-amber-400 to-amber-500 text-white rounded-lg font-semibold hover:from-amber-500 hover:to-amber-600 transition-all duration-200 shadow-md hover:shadow-lg;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 border-2 border-blue-600 text-blue-600 rounded-xl font-semibold transition-all duration-300 hover:bg-blue-50 active:scale-95 disabled:opacity-50;
   }
 
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:from-yellow-700 hover:to-yellow-800 active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-slate-600 hover:bg-slate-100 rounded-xl font-medium transition-colors duration-200 active:scale-95;
+  }
+
+  /* Cards */
   .card {
-    @apply bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-slate-200 p-4;
+    @apply bg-white rounded-2xl border border-slate-200 p-5 shadow-sm transition-all duration-300 hover:shadow-md hover:border-slate-300;
   }
 
   .card-lg {
-    @apply bg-white rounded-2xl shadow-md p-6 border border-slate-200;
+    @apply bg-white rounded-2xl border border-slate-200 p-6 shadow-sm transition-all duration-300 hover:shadow-md;
   }
 
+  .card-premium {
+    @apply bg-gradient-to-br from-white via-slate-50 to-white rounded-2xl border border-slate-200 p-6 shadow-md;
+  }
+
+  /* Text Styles */
   .text-heading {
-    @apply font-bold text-slate-900;
+    @apply font-bold text-slate-900 tracking-tight;
   }
 
   .text-subheading {
     @apply font-semibold text-slate-700;
+  }
+
+  .text-muted {
+    @apply text-slate-500 font-medium;
+  }
+
+  .text-label {
+    @apply text-sm font-semibold text-slate-600 uppercase tracking-wider;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors duration-200;
+  }
+
+  .badge-success {
+    @apply badge bg-green-100 text-green-800;
+  }
+
+  .badge-warning {
+    @apply badge bg-amber-100 text-amber-800;
+  }
+
+  .badge-danger {
+    @apply badge bg-red-100 text-red-800;
+  }
+
+  .badge-info {
+    @apply badge bg-blue-100 text-blue-800;
+  }
+
+  .badge-gold {
+    @apply badge bg-yellow-100 text-yellow-900;
+  }
+
+  /* Input Fields */
+  .input-field {
+    @apply w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-white text-slate-900 placeholder-slate-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-slate-50 disabled:cursor-not-allowed;
+  }
+
+  /* Tables */
+  .table-head {
+    @apply bg-gradient-to-r from-slate-50 to-slate-100 border-b-2 border-slate-200;
+  }
+
+  .table-row {
+    @apply border-b border-slate-200 hover:bg-slate-50 transition-colors duration-200;
+  }
+
+  /* Divider */
+  .divider {
+    @apply border-t border-slate-200;
+  }
+
+  /* Section */
+  .section-header {
+    @apply flex items-center justify-between py-4 border-b border-slate-200;
+  }
+
+  /* Status Indicator */
+  .status-dot {
+    @apply h-2.5 w-2.5 rounded-full;
   }
 }
