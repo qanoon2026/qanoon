@@ -23,11 +23,11 @@ export function getRequiredAwsEnv(key: string) {
 }
 
 function alt(key: string) {
-  // Map commonly used keys to APP_* variants
+  // Map to APP_* names only for Amplify runtime compatibility
   const map: Record<string, string[]> = {
-    AWS_REGION: ["APP_AWS_REGION", "AWS_REGION"],
-    AWS_ACCESS_KEY_ID: ["APP_AWS_ACCESS_KEY_ID", "AWS_ACCESS_KEY_ID"],
-    AWS_SECRET_ACCESS_KEY: ["APP_AWS_SECRET_ACCESS_KEY", "AWS_SECRET_ACCESS_KEY"],
+    AWS_REGION: ["APP_AWS_REGION"],
+    AWS_ACCESS_KEY_ID: ["APP_AWS_ACCESS_KEY_ID"],
+    AWS_SECRET_ACCESS_KEY: ["APP_AWS_SECRET_ACCESS_KEY"],
     S3_BUCKET_NAME: ["S3_BUCKET_NAME"],
     KMS_KEY_ID: ["KMS_KEY_ID"],
     DATABASE_URL: ["DATABASE_URL"],
@@ -54,9 +54,9 @@ export function getRequiredEnv(key: string) {
 }
 
 export function getAwsEnvironmentStatus() {
-  const keys = ["AWS_REGION", "S3_BUCKET_NAME", "DATABASE_URL", "COGNITO_USER_POOL_ID", "COGNITO_CLIENT_ID"];
+  const keys = ["APP_AWS_REGION", "S3_BUCKET_NAME", "DATABASE_URL", "COGNITO_USER_POOL_ID", "COGNITO_CLIENT_ID"];
   return keys.map((key) => ({
     key,
-    configured: alt(key).some((n) => Boolean(process.env[n]))
+    configured: Boolean(process.env[key])
   }));
 }

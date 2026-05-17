@@ -13,8 +13,8 @@ export function getS3Client() {
     } catch (err) {
       // Log and rethrow with Arabic message
       // eslint-disable-next-line no-console
-      console.error('S3 client init failed: missing AWS_REGION', err);
-      throw new Error("خطأ: المتغير البيئي المفقود: APP_AWS_REGION / AWS_REGION");
+      console.error('S3 client init failed: missing APP_AWS_REGION', err);
+      throw new Error("خطأ: المتغير البيئي المفقود: APP_AWS_REGION");
     }
 
     const accessKey = getAwsEnv("AWS_ACCESS_KEY_ID");
