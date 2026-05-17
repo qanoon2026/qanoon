@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Search, Plus, Filter, ChevronDown } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Search, Plus, Filter } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
 import { StatusBadge } from '@/components/StatusBadge';
 import { ActionButton } from '@/components/ActionButton';
@@ -18,11 +18,104 @@ export default function CasesPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('الكل');
 
+  const [selectedCase, setSelectedCase] = useState<any | null>(null);
+  const [caseFiles, setCaseFiles] = useState<any[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   const filtered = casesData.filter((item) => {
     const matchesSearch = item.title.includes(search) || item.client.includes(search);
     const matchesStatus = statusFilter === 'الكل' || item.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
+
+  // Helpers
+  function openCaseDetails(c: any) {
+    setSelectedCase(c);
+    fetchCaseFiles(c.id);
+  }
+
+  async function fetchCaseFiles(caseId: string) {
+    try {
+      const res = await fetch(`/api/files?caseId=${caseId}`);
+      const data = await res.json();
+      if (res.ok) setCaseFiles(data.files || []);
+      else setCaseFiles([]);
+    } catch (err) {
+      setCaseFiles([]);
+    }
+  }
+
+  function closeModal() {
+    setSelectedCase(null);
+    setCaseFiles([]);
+    setUploadError(null);
+    setUploadProgress(0);
+    setUploading(false);
+  }
+
+  async function handleSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !selectedCase) return;
+    setUploadError(null);
+    setUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const presignRes = await fetch('/api/files/presign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ caseId: selectedCase.id, fileName: file.name, contentType: file.type })
+      });
+
+      const presignJson = await presignRes.json();
+      if (!presignRes.ok) throw new Error(presignJson.error || 'فشل طلب رابط التحميل');
+
+      const { uploadUrl, key } = presignJson;
+
+      await uploadToS3(uploadUrl, file, (percent) => setUploadProgress(percent));
+
+      // Save metadata
+      const saveRes = await fetch('/api/files', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ caseId: selectedCase.id, fileName: file.name, fileType: file.type, fileSize: file.size, s3Key: key })
+      });
+
+      const saveJson = await saveRes.json();
+      if (!saveRes.ok) throw new Error(saveJson.error || 'فشل حفظ بيانات الملف');
+
+      // Refresh list
+      await fetchCaseFiles(selectedCase.id);
+      setUploading(false);
+      setUploadProgress(100);
+    } catch (err: any) {
+      setUploadError(err?.message || 'فشل تحميل الملف');
+      setUploading(false);
+    }
+  }
+
+  function uploadToS3(url: string, file: File, onProgress: (p: number) => void) {
+    return new Promise<void>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('PUT', url);
+      xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          onProgress(percent);
+        }
+      };
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) resolve();
+        else reject(new Error('فشل تحميل الملف إلى S3'));
+      };
+      xhr.onerror = () => reject(new Error('فشل تحميل الملف إلى S3'));
+      xhr.send(file);
+    });
+  }
 
   return (
     <div className="space-y-8">
@@ -98,7 +191,7 @@ export default function CasesPage() {
                       <p className="mt-2 text-xs text-slate-500">{caseItem.progress}%</p>
                     </td>
                     <td className="px-5 py-4">
-                      <button className="btn-ghost text-slate-700">عرض</button>
+                      <button className="btn-ghost text-slate-700" onClick={() => openCaseDetails(caseItem)}>عرض</button>
                     </td>
                   </tr>
                 ))}
@@ -137,6 +230,51 @@ export default function CasesPage() {
           </div>
         </aside>
       </div>
+
+      {/* Modal */}
+      {selectedCase && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+          <div className="w-[90%] max-w-2xl rounded-lg bg-white p-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-semibold">تفاصيل القضية #{selectedCase.id}</h3>
+              <button className="btn-ghost" onClick={closeModal}>إغلاق</button>
+            </div>
+
+            <div className="mt-4">
+              <p className="text-sm text-slate-600">{selectedCase.title}</p>
+            </div>
+
+            <div className="mt-6">
+              <p className="text-sm font-semibold">رفع ملف</p>
+              <input ref={fileInputRef} type="file" onChange={handleSelectFile} className="mt-2" />
+              {uploading && <div className="mt-3">جارٍ التحميل: {uploadProgress}%</div>}
+              {uploadError && <div className="mt-3 text-error-600">{uploadError}</div>}
+            </div>
+
+            <div className="mt-6">
+              <p className="text-sm font-semibold">الملفات المرفوعة</p>
+              <div className="mt-3 space-y-2">
+                {caseFiles.length === 0 && <p className="text-sm text-slate-500">لا توجد ملفات</p>}
+                {caseFiles.map((f) => (
+                  <div key={f.id} className="flex items-center justify-between border-b py-2">
+                    <div>
+                      <div className="font-medium">{f.file_name}</div>
+                      <div className="text-sm text-slate-500">{f.file_type} • {f.file_size} bytes</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {f.downloadUrl ? (
+                        <a className="btn-ghost" href={f.downloadUrl} target="_blank" rel="noreferrer">فتح</a>
+                      ) : (
+                        <button className="btn-ghost" onClick={() => window.open(f.downloadUrl || '#')}>فتح</button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

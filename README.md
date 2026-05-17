@@ -72,6 +72,27 @@ If you upload directly from the browser, add this CORS policy to your S3 bucket:
 ```
 
 Limit `AllowedOrigin` to your app origin in production.
+
+JSON example (put via AWS CLI):
+
+```
+[
+  {
+    "AllowedOrigins": ["*"],
+    "AllowedMethods": ["PUT","GET"],
+    "AllowedHeaders": ["*"],
+    "MaxAgeSeconds": 3000
+  }
+]
+```
+
+Apply with AWS CLI:
+
+```bash
+aws s3api put-bucket-cors --bucket YOUR_BUCKET_NAME --cors-configuration file://cors.json
+```
+
+Replace `*` with your app origin in production for tighter security.
 - Store the returned S3 object key in PostgreSQL.
 
 Core PostgreSQL schema:
