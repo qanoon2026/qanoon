@@ -4,6 +4,24 @@ export function getEnv(key: string) {
   return process.env[key];
 }
 
+export function getAwsEnv(key: string) {
+  const names = alt(key);
+  for (const name of names) {
+    const value = process.env[name];
+    if (value) return value;
+  }
+  return undefined;
+}
+
+export function getRequiredAwsEnv(key: string) {
+  const value = getAwsEnv(key);
+  if (!value) {
+    const names = alt(key);
+    throw new Error(`خطأ: المتغير البيئي المفقود: ${names.join(" / ")}`);
+  }
+  return value;
+}
+
 function alt(key: string) {
   // Map commonly used keys to APP_* variants
   const map: Record<string, string[]> = {

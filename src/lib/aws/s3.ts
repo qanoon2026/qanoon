@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { PutObjectCommand, S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { getRequiredEnv } from "@/lib/aws/env";
+import { getAwsEnv, getRequiredAwsEnv, bucketName as defaultS3BucketName } from "@/lib/aws/env";
 
 let s3Client: S3Client | undefined;
 
@@ -9,7 +9,7 @@ export function getS3Client() {
   if (!s3Client) {
     let region: string;
     try {
-      region = getRequiredEnv("AWS_REGION");
+      region = getRequiredAwsEnv("AWS_REGION");
     } catch (err) {
       // Log and rethrow with Arabic message
       // eslint-disable-next-line no-console
@@ -17,8 +17,17 @@ export function getS3Client() {
       throw new Error("خطأ: المتغير البيئي المفقود: APP_AWS_REGION / AWS_REGION");
     }
 
-    const accessKey = process.env.APP_AWS_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID;
-    const secretKey = process.env.APP_AWS_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
+    const accessKey = getAwsEnv("AWS_ACCESS_KEY_ID");
+    const secretKey = getAwsEnv("AWS_SECRET_ACCESS_KEY");
+
+    // Log region and whether an access key is present.
+    // Do not log sensitive secret values.
+    // eslint-disable-next-line no-console
+    console.log('AWS region loaded');
+    if (accessKey) {
+      // eslint-disable-next-line no-console
+      console.log('AWS access key loaded');
+    }
 
     const config: any = { region };
 
@@ -26,7 +35,7 @@ export function getS3Client() {
       config.credentials = { accessKeyId: accessKey, secretAccessKey: secretKey };
     } else {
       // eslint-disable-next-line no-console
-      console.warn('S3 client: AWS credentials not found in env; will rely on default provider chain');
+      console.warn('S3 client: AWS credentials not fully configured; will rely on default provider chain');
     }
 
     try {
@@ -57,9 +66,9 @@ export async function createCaseFileUploadUrl({
     const safeFileName = fileName.replace(/[^0-9A-Za-z\u0600-\u06FF.\- ]/g, "_");
     const key = `tenants/${tenantId}/cases/${caseId}/${randomUUID()}-${safeFileName}`;
 
-    const bucketName = getRequiredEnv("S3_BUCKET_NAME");
+    const bucketName = defaultS3BucketName;
     // eslint-disable-next-line no-console
-    console.log('Using S3 bucket:', bucketName);
+    console.log('S3 bucket loaded:', bucketName);
 
     const command = new PutObjectCommand({
       Bucket: bucketName,
@@ -102,9 +111,9 @@ export async function createCaseFileUploadUrl({
 
 export async function createPresignedGetUrl(key: string, expiresSeconds = 60 * 10) {
   try {
-    const bucketName = getRequiredEnv("S3_BUCKET_NAME");
+    const bucketName = defaultS3BucketName;
     // eslint-disable-next-line no-console
-    console.log('Using S3 bucket:', bucketName);
+    console.log('S3 bucket loaded:', bucketName);
     const command = new GetObjectCommand({
       Bucket: bucketName,
       Key: key
