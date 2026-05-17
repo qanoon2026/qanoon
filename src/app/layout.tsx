@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { AppSidebar } from "@/components/AppSidebar";
-import { Topbar } from "@/components/Topbar";
-import { ThemeProvider } from "@/components/ThemeProvider";
+import { AppSidebar } from '@/components/AppSidebar';
+import { Topbar } from '@/components/Topbar';
+import { ThemeProvider } from '@/components/ThemeProvider';
 
 export const metadata: Metadata = {
   title: "قانوني - نظام إدارة قضايا متقدم",
@@ -21,15 +21,14 @@ export default function RootLayout({
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className="min-h-screen">
+      <body className="min-h-screen bg-[rgb(var(--bg))] text-[rgb(var(--text-primary))]">
         <ThemeProvider>
-          <div className="flex min-h-screen bg-[radial-gradient(circle_at_top_right,rgba(var(--accent),0.12),transparent_22%),radial-gradient(circle_at_bottom_left,rgba(var(--accent),0.08),transparent_30%),linear-gradient(180deg, rgb(var(--bg)) 0%, rgb(var(--bg-alt)) 100%)]">
+          <div className="flex min-h-screen">
             <AppSidebar />
-
-            <div className="flex-1 flex flex-col lg:mr-80">
+            <div className="flex-1 flex flex-col lg:mr-[260px]">
               <Topbar />
               <main className="flex-1 overflow-y-auto">
-                <div className="p-4 sm:p-6 lg:p-8">
+                <div className="px-4 py-5 sm:px-6 lg:px-8 lg:py-6">
                   {children}
                 </div>
               </main>
